@@ -1,48 +1,43 @@
 <template>
   <div class="container">
-      首页
+    <el-carousel height="600px">
+      <el-carousel-item v-for="(item,index) in carousel"
+                        :key="index">
+        <div class="banner-image"
+             :style="`background: url(${item}) center center no-repeat; background-size: contain contain; `"></div>
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
 export default {
-  components: {
-    Logo
+  data() {
+    return {
+      carousel: []
+    }
+  },
+  mounted() {
+    this.$axios({
+      url: '/scenics/banners'
+    })
+      .then(res => {
+        const { data } = res.data
+        this.carousel = data.map(item => {
+          return (item.url = this.$axios.defaults.baseURL + item.url)
+        })
+        console.log(this.carousel)
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
   }
 }
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.banner-image {
+  height: 100%;
+  width: 100%;
 }
 </style>
