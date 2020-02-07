@@ -29,4 +29,7 @@ a {
 a:hover {
   color: inherit;
 }
+i,em{
+    font-style: normal;
+}
 </style>
