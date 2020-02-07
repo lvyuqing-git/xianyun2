@@ -4,7 +4,7 @@
       <el-carousel-item v-for="(item,index) in carousel"
                         :key="index">
         <div class="banner-image"
-             :style="`background: url(${item}) center center no-repeat; background-size: contain contain; `"></div>
+             :style="`background: url(${item}) center center no-repeat; background-size:contain contain;`"></div>
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -36,6 +36,10 @@ export default {
 </script>
 
 <style>
+.container{
+    min-width: 1000px;
+    margin: 0 auto;
+}
 .banner-image {
   height: 100%;
   width: 100%;
