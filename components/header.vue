@@ -4,7 +4,7 @@
             justify="space-between">
       <div>
         <img src="http://157.122.54.189:9093/images/logo.jpg"
-             alt="">
+             alt="" class="logo">
       </div>
       <el-row class="nav" type="flex">
         <nuxt-link to="/">首页</nuxt-link>
@@ -26,7 +26,7 @@
             <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <div>
+        <div @click="$router.push({path:'/user/login'})">
           <span>
             登录/注册
           </span>
@@ -47,6 +47,9 @@ header {
     width: 1000px;
     line-height: 60px;
     margin: 0 auto;
+    .logo{
+        height: 60px;
+    }
   .nav {
     flex: 1;
     margin-left: 30px;

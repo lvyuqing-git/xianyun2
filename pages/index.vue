@@ -12,7 +12,7 @@
         <!-- tab栏 -->
         <el-row type="flex"
                 class="search-tab">
-          <span v-for="(item,index) in postion" :key="index" @click="clickOptions(index)" :class="{active : current===index}">
+          <span v-for="(item,index) in postion" :key="index" @click="clickOptions($event,index)" :class="{active : current===index}">
             <i>{{item.name}}</i>
           </span>
         </el-row>
@@ -60,14 +60,13 @@ export default {
         this.carousel = data.map(item => {
           return (item.url = this.$axios.defaults.baseURL + item.url)
         })
-        console.log(this.carousel)
       })
       .catch(function(error) {
         console.log(error)
       })
   },
   methods: {
-      clickOptions(index){
+      clickOptions($event,index){
           this.current = index
       }
   }
