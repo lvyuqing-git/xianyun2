@@ -1,6 +1,6 @@
 <template>
   <el-form :model="loginForm"
-           ref="form"
+           ref="loginForm"
            :rules="rules"
            class="form">
 
@@ -53,13 +53,12 @@ export default {
   methods: {
     // 提交登录
     handleLoginSubmit() {
-      this.$axios({
-        url: 'accounts/login',
-        method: 'POST',
-        data: this.loginForm
-      }).then((res)=>{
-          console.log(res);
-          
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+            this.$store.dispatch('user/login',this.loginForm).then(()=>{
+               this.$message.success('登录成功')
+            })
+        }
       })
     }
   }
