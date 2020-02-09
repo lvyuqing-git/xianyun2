@@ -11,7 +11,7 @@
     </el-form-item>
 
     <el-form-item class="form-item"
-                  prop="verificationcode">
+                  prop="captcha">
       <el-input placeholder="验证码"
                 v-model="registerForm.captcha">
         <template slot="append">
@@ -95,7 +95,7 @@ export default {
       // 表单规则
       rules: {
         username: [{ validator: username, trigger: 'blur' }],
-        verificationcode: [
+        captcha: [
           { required: true, message: '请输入验证码', trigger: 'blur' }
         ],
         nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
