@@ -34,7 +34,8 @@
               {{$store.state.user.userInfo.user.nickname}}<i class="el-icon-arrow-down el-icon--right el-icon-caret-bottom"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>黄金糕</el-dropdown-item>
+              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item><span @click="logOut">退出</span></el-dropdown-item>
 
             </el-dropdown-menu>
           </el-dropdown>
@@ -52,7 +53,16 @@
 </template>
 
 <script>
-export default {}
+export default {
+    methods: {
+        logOut(){
+            this.$store.commit('user/setUserInfo',{
+                token : '',
+                user : {}
+            })
+        }
+    }
+}
 </script>
 
 <style lang='less' scoped>

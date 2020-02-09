@@ -19,10 +19,10 @@
                 </el-row>
 
                 <!-- 登录功能组件 -->
-               <LoginForm></LoginForm>
+               <LoginForm v-if="currentTab == 0"></LoginForm>
 
                 <!-- 注册功能组件 -->
-                <!-- <RegisterForm v-if="currentTab == 1"/> -->
+                <RegisterForm v-else-if="currentTab"/>
             </div>
         </el-row>
     </div>
@@ -30,14 +30,15 @@
 
 <script>
 import LoginForm from '@/components/user/loginForm'
+import RegisterForm from '@/components/user/registerForm'
 export default {
     data(){
         return {
-            currentTab: 0
+            currentTab: 1
         }
     },
    components: {
-       LoginForm
+       LoginForm,RegisterForm
    }
 }
 </script>
