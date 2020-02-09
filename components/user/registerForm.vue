@@ -13,7 +13,7 @@
     <el-form-item class="form-item"
                   prop="verificationcode">
       <el-input placeholder="验证码"
-                v-model="registerForm.verificationcode">
+                v-model="registerForm.captcha">
         <template slot="append">
           <el-button @click="handleSendCaptcha">
             发送验证码
@@ -86,11 +86,11 @@ export default {
     return {
       // 表单数据
       registerForm: {
-        username: '',
-        verificationcode: '',
-        nickname: '',
-        password: '',
-        confirmpassword: ''
+        username: '15360562781',
+        captcha: '000000',
+        nickname: '这是用户昵称',
+        password: '123456',
+        confirmpassword: '123456'
       },
       // 表单规则
       rules: {
@@ -109,16 +109,32 @@ export default {
     handleSendCaptcha() {
       if (!this.registerForm.username) {
         this.$alert('请输入手机号', '提示', {
-          confirmButtonText: '确定',
+          confirmButtonText: '确定'
         })
-      }else{
-          
+      } else {
+        this.$store
+          .dispatch('user/verificationcode', {
+            tel: this.registerForm.username
+          })
+          .then(res => {
+            this.$message({
+              message: '验证码发送成功',
+              type: 'success'
+            })
+          })
       }
     },
 
     // 注册
     handleRegSubmit() {
-      console.log(this.form)
+      let { confirmpassword, ...post } = this.registerForm
+      this.$store.dispatch('user/register', post) .then(res => {
+            this.$message({
+              message: '注册成功',
+              type: 'success'
+            })
+            this.$router.push('/')
+          })
     }
   }
 }
