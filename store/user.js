@@ -42,5 +42,24 @@ export const actions = {
       let { data } = res;
       store.commit("setUserInfo", data);
     });
+  },
+  //机票列表
+  airList(store, value) {
+    return this.$axios({
+      url: "/cities",
+      params: {
+        name: value
+      }
+    }).then(res => {
+      const { data } = res.data;
+      const newArray = data.map(item => {
+        item.value = item.name.replace("市", "");
+        
+        return item;
+      });
+      
+    //   return Promise.resolve(newArray)
+      return newArray
+    })
   }
 };
