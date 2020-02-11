@@ -30,14 +30,16 @@
                          placeholder="请搜索到达城市"
                          @select="handleDestSelect"
                          class="el-autocomplete"
-                         v-model="form.destCity"></el-autocomplete>
+                         v-model="form.destCity"
+                         @blur="destSearchBlur"></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
         <!-- change 用户确认选择日期时触发 -->
         <el-date-picker type="date"
                         placeholder="请选择日期"
                         style="width: 100%;"
-                        @change="handleDate">
+                        @change="handleDate"
+                        v-model="form.departDate">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="">
@@ -56,6 +58,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -87,6 +90,11 @@ export default {
     },
     //出发地输入框失焦
     departSearchBlur() {
+      if (this.departArray.length === 0) {
+        return
+      }
+      console.log(this.departArray)
+
       this.form.departCity = this.departArray[1].value
       this.form.departCode = this.departArray[1].sort
     },
@@ -110,15 +118,58 @@ export default {
       this.form.destCity = item.value
       this.form.destCode = item.sort
     },
-
+    //目标地输入框失焦
+    destSearchBlur() {
+      if (this.destArray.length === 0) {
+        return
+      }
+      this.form.destCity = this.destArray[1].value
+      this.form.destCode = this.destArray[1].sort
+    },
     // 确认选择日期时触发
-    handleDate(value) {},
+    handleDate(value) {
+      this.form.departDate = moment(value).format('YYYY-MM-DD')
+    },
 
     // 触发和目标城市切换时触发
-    handleReverse() {},
+    handleReverse() {
+      const { departCity, departCode, destCity, destCode } = this.form
+      this.form.departCity = destCity
+      this.form.departCode = destCode
+      this.form.destCity = departCity
+      this.form.destCode = departCode
+    },
 
     // 提交表单是触发
     handleSubmit() {
+      if (!this.form.departCity) {
+        this.$message({
+          showClose: true,
+          message: '出发地不能为空',
+          type: 'warning'
+        })
+        return
+      }
+       if (!this.form.destCity) {
+        this.$message({
+          showClose: true,
+          message: '目标地不能为空',
+          type: 'warning'
+        })
+        return
+      }
+       if (!this.form.departDate) {
+        this.$message({
+          showClose: true,
+          message: '出发日期不能为空',
+          type: 'warning'
+        })
+        return
+      }
+    this.$router.push({
+        path : 'air/flights',
+        query : this.form
+    })
       console.log(this.form)
     }
   },
