@@ -89,6 +89,9 @@ export default {
     handleSearchTab(item, index) {},
 
     queryDepartSearch(value, cb) {
+    //   if (!this.form.departCity) {
+    //     cb([])
+    //   }
       this.$store.dispatch('user/airList', value).then(res => {
         this.departArray = res
         cb(res)
@@ -99,8 +102,8 @@ export default {
       if (this.departArray.length === 0) {
         return
       }
-      this.form.departCity = this.departArray[1].value
-      this.form.departCode = this.departArray[1].sort
+      this.form.departCity = this.departArray[0].value
+      this.form.departCode = this.departArray[0].sort
     },
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
@@ -127,8 +130,8 @@ export default {
       if (this.destArray.length === 0) {
         return
       }
-      this.form.destCity = this.destArray[1].value
-      this.form.destCode = this.destArray[1].sort
+      this.form.destCity = this.destArray[0].value
+      this.form.destCode = this.destArray[0].sort
     },
     // 确认选择日期时触发
     handleDate(value) {
