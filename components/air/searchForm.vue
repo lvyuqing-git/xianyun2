@@ -93,8 +93,6 @@ export default {
       if (this.departArray.length === 0) {
         return
       }
-      console.log(this.departArray)
-
       this.form.departCity = this.departArray[1].value
       this.form.departCode = this.departArray[1].sort
     },
@@ -150,7 +148,7 @@ export default {
         })
         return
       }
-       if (!this.form.destCity) {
+      if (!this.form.destCity) {
         this.$message({
           showClose: true,
           message: '目标地不能为空',
@@ -158,7 +156,7 @@ export default {
         })
         return
       }
-       if (!this.form.departDate) {
+      if (!this.form.departDate) {
         this.$message({
           showClose: true,
           message: '出发日期不能为空',
@@ -166,11 +164,10 @@ export default {
         })
         return
       }
-    this.$router.push({
-        path : 'air/flights',
-        query : this.form
-    })
-      console.log(this.form)
+      this.$router.push({
+        path: 'air/flights',
+        query: this.form
+      })
     }
   },
   mounted() {}
