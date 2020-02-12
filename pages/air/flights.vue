@@ -14,7 +14,7 @@
         <FlightsListHead></FlightsListHead>
 
         <!-- 航班信息 -->
-        <FlightsItem v-for="(item,index) in airTicketList.flights"
+        <FlightsItem v-for="(item,index) in arr"
                      :key="index"
                      :data="item"></FlightsItem>
         <el-pagination @size-change="handleSizeChange"
@@ -39,9 +39,26 @@
 import FlightsListHead from '@/components/air/flightsListHead'
 import FlightsItem from '@/components/air/flightsItem'
 export default {
+  computed: {
+    arr() {
+      if (!this.airTicketList.flights) {
+        // 没有值返回一个空数组
+        return []
+      }
+      let arr = this.airTicketList.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      )
+
+      return arr
+    }
+  },
   data() {
     return {
-      airTicketList: []
+      airTicketList: [],
+      showInfoList: [],
+      pageIndex: 1,
+      pageSize: 5
     }
   },
   components: {
@@ -54,24 +71,25 @@ export default {
       params: this.$route.query
     }).then(res => {
       this.airTicketList = res.data
-      console.log(this.airTicketList)
     })
   },
   methods: {
     //改变页码大小时触发
     handleSizeChange(value) {
-      console.log('改变页码大小'+value)
+      this.pageSize = value
     },
     //当前页发生改变时触发
-    handleCurrentChange(index){
-        console.log('页面改变'+index);
-        
+    handleCurrentChange(index) {
+      this.pageIndex = index
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+.el-pagination{
+    text-align: center;
+}
 .contianer {
   width: 1000px;
   margin: 20px auto;
