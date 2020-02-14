@@ -5,7 +5,8 @@
 
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
-        <!-- 过滤条件 -->
+        <FlightsFilters :data="copyData"
+                        @getArrDate='getArrDate'></FlightsFilters>
         <div>
 
         </div>
@@ -38,6 +39,7 @@
 <script>
 import FlightsListHead from '@/components/air/flightsListHead'
 import FlightsItem from '@/components/air/flightsItem'
+import FlightsFilters from '@/components/air/flightsFilters'
 export default {
   computed: {
     arr() {
@@ -55,15 +57,24 @@ export default {
   },
   data() {
     return {
-      airTicketList: [],
-      showInfoList: [],
+      airTicketList: {
+        info: {},
+        options: {}
+      },
+
       pageIndex: 1,
-      pageSize: 5
+      pageSize: 5,
+      copyData: {
+        info: {},
+        options: {},
+        flights : []
+      }
     }
   },
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
+    FlightsFilters
   },
   mounted() {
     this.$axios({
@@ -71,6 +82,7 @@ export default {
       params: this.$route.query
     }).then(res => {
       this.airTicketList = res.data
+      this.copyData = { ...res.data }
     })
   },
   methods: {
@@ -81,14 +93,19 @@ export default {
     //当前页发生改变时触发
     handleCurrentChange(index) {
       this.pageIndex = index
+    },
+    //过滤
+    getArrDate(value) {
+      this.airTicketList.flights = value
+      this.airTicketList.total = value.length
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-.el-pagination{
-    text-align: center;
+.el-pagination {
+  text-align: center;
 }
 .contianer {
   width: 1000px;
