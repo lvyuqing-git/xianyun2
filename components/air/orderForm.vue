@@ -3,11 +3,13 @@
     <div class="air-column">
       <h2>乘机人</h2>
       <el-form class="member-info">
-        <div class="member-info-item" v-for="(item,index) in users" :key="index">
+        <div class="member-info-item"
+             v-for="(item,index) in form.users"
+             :key="index">
           <el-form-item label="乘机人类型">
             <el-input placeholder="姓名"
                       class="input-with-select"
-                      v-model="users.contactName">
+                      v-model="form.users[index].username">
               <el-select slot="prepend"
                          value="1"
                          placeholder="请选择">
@@ -20,7 +22,7 @@
           <el-form-item label="证件类型">
             <el-input placeholder="证件号码"
                       class="input-with-select"
-                      v-model="users.id">
+                      v-model="form.users[index].id">
               <el-select slot="prepend"
                          value="1"
                          placeholder="请选择">
@@ -44,9 +46,12 @@
     <div class="air-column">
       <h2>保险</h2>
       <div>
-        <div class="insurance-item">
-          <el-checkbox label="航空意外险：￥30/份×1  最高赔付260万"
-                       border>
+        <div class="insurance-item"
+             v-for="(item,index) in airTicketInfo.insurances"
+             :key="index">
+          <el-checkbox :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`"
+                       border
+                       @change="insuranceChoice(item.id)">
           </el-checkbox>
         </div>
       </div>
@@ -57,11 +62,12 @@
       <div class="contact">
         <el-form label-width="60px">
           <el-form-item label="姓名">
-            <el-input></el-input>
+            <el-input v-model="form.contactName"></el-input>
           </el-form-item>
 
           <el-form-item label="手机">
-            <el-input placeholder="请输入内容">
+            <el-input placeholder="请输入内容"
+                      v-model="form.contactPhone">
               <template slot="append">
                 <el-button @click="handleSendCaptcha">发送验证码</el-button>
               </template>
@@ -69,7 +75,7 @@
           </el-form-item>
 
           <el-form-item label="验证码">
-            <el-input></el-input>
+            <el-input v-model="form.captcha"></el-input>
           </el-form-item>
         </el-form>
         <el-button type="warning"
@@ -84,44 +90,88 @@
 export default {
   data() {
     return {
-      users: [
-        {
-          contactName: '',
-          id: ''
-        }
-      ],
-      airTicketInfo : {} 
+      //机票信息
+      airTicketInfo: {},
+
+      form: {
+        //乘机人
+        users: [
+          {
+            username: '乘机人',
+            id: '440811199811210390'
+          }
+        ],
+        //保险
+        insurances: [],
+        //联系人名
+        contactName: '名字',
+        //联系电话
+        contactPhone: '15360562781',
+        //手机验证码
+        captcha: '000000',
+        //是否需要发票
+        invoice: false,
+        //座位id
+        seat_xid: this.$route.query.seat_xid,
+        //航班id
+        air: this.$route.query.id
+      }
     }
   },
   methods: {
+    //选择保险
+    insuranceChoice(id) {
+      let index = this.form.insurances.indexOf(id)
+      if (index === -1) {
+        this.form.insurances.push(id)
+      } else {
+        this.form.insurances.splice(index, 1)
+      }
+    },
     // 添加乘机人
     handleAddUsers() {
-      this.users.push({
-        contactName: '',
+      this.form.users.push({
+        username: '',
         id: ''
       })
     },
 
     // 移除乘机人
     handleDeleteUser(index) {
-        this.users.splice(index,1)
+      this.users.splice(index, 1)
     },
 
     // 发送手机验证码
-    handleSendCaptcha() {},
+    handleSendCaptcha() {
+      this.$store
+        .dispatch('user/verificationcode', { tel: this.form.contactPhone })
+        .then(res => {
+          this.$message.success('发送成功')
+        })
+    },
 
     // 提交订单
-    handleSubmit() {}
+    handleSubmit() {
+      this.$axios({
+        url: '/airorders',
+        method: 'POST',
+        data: this.form,
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+        }
+      }).then(res => {
+        this.$message.success(res.data.message)
+      })
+    }
   },
-  mounted () {
-      const {id,seat_xid} = this.$route.query
-     this.$axios({
-         url : '/airs/' + id,
-         params : seat_xid
-     }).then((res)=>{
-         this.airTicketInfo = res.data
-     })
-      
+  mounted() {
+    const { id, seat_xid } = this.$route.query
+    this.$axios({
+      url: '/airs/' + id,
+      params: seat_xid
+    }).then(res => {
+      this.airTicketInfo = res.data
+    })
   }
 }
 </script>

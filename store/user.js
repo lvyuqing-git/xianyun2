@@ -20,7 +20,6 @@ export const actions = {
       data
     }).then(res => {
       let { data } = res;
-      console.log(res);
       store.commit("setUserInfo", data);
     });
   },
