@@ -89,9 +89,9 @@ export default {
     handleSearchTab(item, index) {},
 
     queryDepartSearch(value, cb) {
-    //   if (!this.form.departCity) {
-    //     cb([])
-    //   }
+      //   if (!this.form.departCity) {
+      //     cb([])
+      //   }
       this.$store.dispatch('user/airList', value).then(res => {
         this.departArray = res
         cb(res)
@@ -173,6 +173,9 @@ export default {
         })
         return
       }
+
+      //搜索记录
+      this.$store.commit('air/setSearchHistory', this.form)
       this.$router.push({
         path: 'air/flights',
         query: this.form
