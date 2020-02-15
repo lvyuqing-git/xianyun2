@@ -3,11 +3,11 @@
     <div class="air-column">
       <h2>乘机人</h2>
       <el-form class="member-info">
-        <div class="member-info-item">
-
+        <div class="member-info-item" v-for="(item,index) in users" :key="index">
           <el-form-item label="乘机人类型">
             <el-input placeholder="姓名"
-                      class="input-with-select">
+                      class="input-with-select"
+                      v-model="users.contactName">
               <el-select slot="prepend"
                          value="1"
                          placeholder="请选择">
@@ -19,7 +19,8 @@
 
           <el-form-item label="证件类型">
             <el-input placeholder="证件号码"
-                      class="input-with-select">
+                      class="input-with-select"
+                      v-model="users.id">
               <el-select slot="prepend"
                          value="1"
                          placeholder="请选择">
@@ -31,7 +32,7 @@
           </el-form-item>
 
           <span class="delete-user"
-                @click="handleDeleteUser()">-</span>
+                @click="handleDeleteUser(index)">-</span>
         </div>
       </el-form>
 
@@ -73,7 +74,7 @@
         </el-form>
         <el-button type="warning"
                    class="submit"
-                   @click="handleSubmit">提交订单</el-button>
+                   @click="handleSubmit()">提交订单</el-button>
       </div>
     </div>
   </div>
@@ -83,24 +84,44 @@
 export default {
   data() {
     return {
-      users: {
-        contactName: '',
-        id: ''
-      }
+      users: [
+        {
+          contactName: '',
+          id: ''
+        }
+      ],
+      airTicketInfo : {} 
     }
   },
   methods: {
     // 添加乘机人
-    handleAddUsers() {},
+    handleAddUsers() {
+      this.users.push({
+        contactName: '',
+        id: ''
+      })
+    },
 
     // 移除乘机人
-    handleDeleteUser() {},
+    handleDeleteUser(index) {
+        this.users.splice(index,1)
+    },
 
     // 发送手机验证码
     handleSendCaptcha() {},
 
     // 提交订单
     handleSubmit() {}
+  },
+  mounted () {
+      const {id,seat_xid} = this.$route.query
+     this.$axios({
+         url : '/airs/' + id,
+         params : seat_xid
+     }).then((res)=>{
+         this.airTicketInfo = res.data
+     })
+      
   }
 }
 </script>

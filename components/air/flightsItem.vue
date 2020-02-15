@@ -59,7 +59,8 @@
             <el-col :span="3"
                     class="choose-button">
               <el-button type="warning"
-                         size="mini" @click="buyTicket">
+                         size="mini"
+                         @click="buyTicket(item)">
                 选定
               </el-button>
               <p>剩余：{{data.airport_tax_audlet}}</p>
@@ -100,11 +101,15 @@ export default {
     }
   },
   methods: {
-      buyTicket(){
-          this.$router.push({
-              path : '/air/order'
-          })
-      }
+    buyTicket(item) {
+      this.$router.push({
+        path: '/air/order',
+        query: {
+          id: this.data.id,
+          seat_xid: item.seat_xid
+        }
+      })
+    }
   }
 }
 </script>

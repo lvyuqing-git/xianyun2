@@ -93,8 +93,7 @@ export default {
         url: '/airs',
         params: this.$route.query
       }).then(res => {
-          console.log(res);
-          
+        
         this.airTicketList = res.data
         this.copyData = { ...res.data }
       })
