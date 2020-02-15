@@ -59,7 +59,7 @@
             <el-col :span="3"
                     class="choose-button">
               <el-button type="warning"
-                         size="mini">
+                         size="mini" @click="buyTicket">
                 选定
               </el-button>
               <p>剩余：{{data.airport_tax_audlet}}</p>
@@ -98,6 +98,13 @@ export default {
       let minute = time % 60
       return `${hour}时${minute}分`
     }
+  },
+  methods: {
+      buyTicket(){
+          this.$router.push({
+              path : '/air/order'
+          })
+      }
   }
 }
 </script>
