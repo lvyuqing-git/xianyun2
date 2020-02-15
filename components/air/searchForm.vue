@@ -173,8 +173,7 @@ export default {
         })
         return
       }
-
-      //搜索记录
+     //搜索记录
       this.$store.commit('air/setSearchHistory', this.form)
       this.$router.push({
         path: 'air/flights',

@@ -43,6 +43,11 @@ import FlightsItem from '@/components/air/flightsItem'
 import FlightsFilters from '@/components/air/flightsFilters'
 import FlightsAside from '@/components/air/flightsAside'
 export default {
+  beforeRouteUpdate(to, from, next) {
+     this.pageIndex = 1
+    this.init()
+    next()
+  },
   computed: {
     arr() {
       if (!this.airTicketList.flights) {
@@ -69,7 +74,7 @@ export default {
       copyData: {
         info: {},
         options: {},
-        flights : []
+        flights: []
       }
     }
   },
@@ -80,15 +85,20 @@ export default {
     FlightsAside
   },
   mounted() {
-    this.$axios({
-      url: 'airs',
-      params: this.$route.query
-    }).then(res => {
-      this.airTicketList = res.data
-      this.copyData = { ...res.data }
-    })
+    this.init()
   },
   methods: {
+    init() {
+      this.$axios({
+        url: '/airs',
+        params: this.$route.query
+      }).then(res => {
+          console.log(res);
+          
+        this.airTicketList = res.data
+        this.copyData = { ...res.data }
+      })
+    },
     //改变页码大小时触发
     handleSizeChange(value) {
       this.pageSize = value
