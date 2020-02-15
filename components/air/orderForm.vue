@@ -152,16 +152,62 @@ export default {
 
     // 提交订单
     handleSubmit() {
-      this.$axios({
-        url: '/airorders',
-        method: 'POST',
-        data: this.form,
-        headers: {
-          Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+      //表单验证
+      let rules = {
+        users: {
+          errMessage: '乘机人信息不能为空',
+          validator: () => {
+            let valid = ture
+            this.form.users.forEach(item => {
+              if (!item.id || !item.username) {
+                valid = false
+              }
+            })
+            return valid
+          }
+        },
+        contactName: {
+          errMessage: '联系人不能为空',
+          validator: () => {
+            return !this.form.contactName
+          }
+        },
+
+        contactPhone: {
+          errMessage: '联系电话不能为空',
+          validator: () => {
+            return !this.form.contactPhone
+          }
+        },
+
+        captcha: {
+          errMessage: '验证码',
+          validator: () => {
+            return !this.form.captcha
+          }
         }
-      }).then(res => {
-        this.$message.success(res.data.message)
+      }
+      let arr = Object.keys(rules)
+      let valid = true
+      arr.forEach(item => {
+        if (!valid) return
+        if (!rules[item].validator) {
+          valid = false
+          this.$message(rules[item].errMessage)
+        }
       })
+      if (valid) {
+        this.$axios({
+          url: '/airorders',
+          method: 'POST',
+          data: this.form,
+          headers: {
+            Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+          }
+        }).then(res => {
+          this.$message.success(res.data.message)
+        })
+      }
     }
   },
   mounted() {
