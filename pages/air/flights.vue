@@ -44,9 +44,9 @@ import FlightsFilters from '@/components/air/flightsFilters'
 import FlightsAside from '@/components/air/flightsAside'
 export default {
   beforeRouteUpdate(to, from, next) {
-     this.pageIndex = 1
-    this.init()
+    this.pageIndex = 1
     next()
+    this.init()
   },
   computed: {
     arr() {
@@ -93,7 +93,6 @@ export default {
         url: '/airs',
         params: this.$route.query
       }).then(res => {
-        
         this.airTicketList = res.data
         this.copyData = { ...res.data }
       })

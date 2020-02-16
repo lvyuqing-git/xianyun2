@@ -202,7 +202,8 @@ export default {
           method: 'POST',
           data: this.form,
           headers: {
-            Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+            // Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+            
           }
         }).then(res => {
           this.$message.success(res.data.message)
