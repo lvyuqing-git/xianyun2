@@ -9,7 +9,7 @@
 
       <!-- 侧边栏 -->
       <div class="aside">
-        <OrderAside></OrderAside>
+        <OrderAside :data="$store.state.air.airInfo"></OrderAside>
       </div>
     </el-row>
   </div>
@@ -22,6 +22,10 @@ export default {
   components: {
     OrderForm,
     OrderAside
+  },
+  mounted () {
+      console.log(this.$store.state.air.airInfo.seat_infos.org_settle_price);
+      
   }
 }
 </script>

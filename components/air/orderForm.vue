@@ -83,15 +83,35 @@
                    @click="handleSubmit()">提交订单</el-button>
       </div>
     </div>
+    <span>{{imputedPrice}}</span>
   </div>
 </template>
 
 <script>
 export default {
+  computed: {
+      imputedPrice(){
+           if(!this.airTicketInfo.seat_infos){
+                return;
+            }
+          let price = 0
+          price+=this.airTicketInfo.seat_infos.org_settle_price
+          price+=this.airTicketInfo.airport_tax_audlet
+          this.airTicketInfo.insurances.forEach((item)=>{
+              if(this.form.insurances.indexOf(item.id) > -1){
+                  price += item.price
+              }
+          })
+          price *= this.form.users.length
+          this.$store.commit('air/setPrice',price)
+      }
+  },
   data() {
     return {
       //机票信息
-      airTicketInfo: {},
+      airTicketInfo: {
+          insurances : []
+      },
 
       form: {
         //乘机人
@@ -202,8 +222,7 @@ export default {
           method: 'POST',
           data: this.form,
           headers: {
-            // Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
-            
+            Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
           }
         }).then(res => {
           this.$message.success(res.data.message)
@@ -215,9 +234,12 @@ export default {
     const { id, seat_xid } = this.$route.query
     this.$axios({
       url: '/airs/' + id,
-      params: seat_xid
+      params: {
+          seat_xid : seat_xid
+      }
     }).then(res => {
       this.airTicketInfo = res.data
+      this.$store.commit('air/setAirInfo',this.airTicketInfo)
     })
   }
 }
