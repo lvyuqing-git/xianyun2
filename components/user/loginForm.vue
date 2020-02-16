@@ -55,10 +55,10 @@ export default {
     handleLoginSubmit() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-            this.$store.dispatch('user/login',this.loginForm).then(()=>{
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
             //    this.$message.success('登录成功')
-               this.$router.push('/')
-            })
+            this.$router.replace(this.$route.query.returnUrl)
+          })
         }
       })
     }
