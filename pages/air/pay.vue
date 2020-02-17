@@ -2,7 +2,7 @@
   <div class="container">
     <div class="main">
       <div class="pay-title">
-        支付总金额 <span class="pay-price">￥ 1000</span>
+        支付总金额 <span class="pay-price">￥ {{order.price}}</span>
       </div>
       <div class="pay-main">
         <h4>微信支付</h4>
@@ -12,7 +12,8 @@
                 class="pay-qrcode">
           <div class="qrcode">
             <!-- 二维码 -->
-            <canvas id="qrcode-stage"></canvas>
+            <canvas id="qrcode-stage"
+                    ref="canvas"></canvas>
             <p>请使用微信扫一扫</p>
             <p>扫描二维码支付</p>
           </div>
@@ -27,7 +28,13 @@
 </template>
 
 <script>
+import QRCode from 'qrcode'
 export default {
+  data() {
+    return {
+      order: {}
+    }
+  },
   mounted() {
     setTimeout(() => {
       this.$axios({
@@ -36,9 +43,28 @@ export default {
           Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
         }
       }).then(res => {
-        console.log(res)
+        this.order = res.data
+        const { code_url } = res.data.payInfo
+        QRCode.toDataURL(this.$refs.canvas, 'text', {
+          width: 200
+        })
       })
     }, 0)
+    const { id, price, orderNo } = this.order
+    this.$axios({
+      url: '/airorders/checkpay',
+      method: 'POST',
+      data: {
+        id: id,
+        nonce_str_: price,
+        out_trade_no: orderNo
+      },
+      headers: {
+        Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+      }
+    }).then(res => {
+      console.log(res)
+    })
   }
 }
 </script>
