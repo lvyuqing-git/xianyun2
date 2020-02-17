@@ -228,7 +228,6 @@ export default {
           this.$router.push({
               path : '/air/pay',
               query : {
-                  price : res.data.data.price,
                   id : res.data.data.id
               }
           })
