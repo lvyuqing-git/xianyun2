@@ -30,9 +30,37 @@
 <script>
 import QRCode from 'qrcode'
 export default {
+  methods: {
+    isPay() {
+      this.timer = setInterval(() => {
+        const { id, price, orderNo } = this.order
+        this.$axios({
+          url: '/airorders/checkpay',
+          method: 'POST',
+          data: {
+            id: id,
+            nonce_str_: price,
+            out_trade_no: orderNo
+          },
+          headers: {
+            Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
+          }
+        }).then(res => {
+          if (res.data.statusTxt === '支付完成') {
+               clearInterval(this.timer)
+            this.$alert('支付成功', '提示', {
+              confirmButtonText: '确定'
+            })
+           
+          }
+        })
+      }, 3000)
+    }
+  },
   data() {
     return {
-      order: {}
+      order: {},
+      timer: ''
     }
   },
   mounted() {
@@ -50,21 +78,10 @@ export default {
         })
       })
     }, 0)
-    const { id, price, orderNo } = this.order
-    this.$axios({
-      url: '/airorders/checkpay',
-      method: 'POST',
-      data: {
-        id: id,
-        nonce_str_: price,
-        out_trade_no: orderNo
-      },
-      headers: {
-        Authorization: 'Bearer ' + this.$store.state.user.userInfo.token
-      }
-    }).then(res => {
-      console.log(res)
-    })
+    this.isPay()
+  },
+  destroyed() {
+    clearInterval(this.timer)
   }
 }
 </script>
