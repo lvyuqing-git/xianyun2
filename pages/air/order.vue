@@ -22,10 +22,6 @@ export default {
   components: {
     OrderForm,
     OrderAside
-  },
-  mounted () {
-      console.log(this.$store.state.air.airInfo.seat_infos.org_settle_price);
-      
   }
 }
 </script>
